@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang = "ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content = "text/html; charset=UTF-8">
+<script src = "https://ct-auth.a-to-ne.jp/v1/atone.js"></script>		<!-- test module url --> 
+</head>
+<title> Page Title </title>
+<body>
+<button id="atone-button"> Atone Payment </button>
+<script>
+	var authentication_token_get = '';
+	var data = {
+	         "amount": 2000, 			 	                        		 									// Payment Amount
+			 "shop_transaction_no": "shop-tran-00000000008",                        		 					// Shop Transaction no 
+			 "user_no": "uesr-00000001", 				       			                 						// user ID 
+			 "description_trans": "ポイント利用あり",
+			 "sales_settled": true, 
+			 "transaction_options": [1], 			
+	         "checksum": "CUhb2AuRaIWJi3XxQy8fyTzkCvEYw9mXODfD9UdpvZI=", 										// checksum
+	         "customer": {
+			 "customer_name": "注文太郎",
+			 "customer_family_name": "注文",
+		     "customer_given_name": "太郎",		
+		     "customer_name_kana": "ちゅうもんたろう",
+		     "customer_family_name_kana": "ちゅうもん",
+			 "customer_given_name_kana": "たろう",		
+		     "phone_number": "090-1111-1111",
+		     "birthday": "1990-01-01",
+		     "sex_division": "1",
+			 "zip_code": "123-4567",
+		     "address": "東京都中央区銀座１－１０ー６　銀座ファーストビル４階",
+		     "tel": "03112341234",
+		     "email": "no@netprotections.co.jp",
+			 "shop_customer_id": "123456ABCDEFG",
+			 "shop_customer_seller_code ": "123456ABCDEFG ",
+			 "terminal_id": "4000001800"			 
+	},
+	"dest_customers": [{									// サービス提供先
+		"dest_customer_name": "銀座太郎",
+		"dest_customer_name_kana": "ぎんざたろう",
+		"dest_zip_code": "123-4567",
+		"dest_address": "東京都中央区銀座１－１０ー６ 銀座ファーストビル４階",
+		"dest_tel": "031-234-1234"
+	}],
+	"items": [{
+		"shop_item_id": "item-012",                			// 加盟店商品ID: 必須
+		"shop_seller_code": "123456ABCDEFG",       			// 加盟店商品ID: 必須
+		"item_name": "商品 012",	 	           			// 商品名: 必須
+		"item_price": 2000, 	 	               			// 商品単価:必須
+		"list_price": 3000, 	 	               			// 商品単価:必須
+		"original_price": 2000, 			       			// 個数: 必須
+		"item_count": 1, 						   			// 個数: 必須
+		"item_url": "https://atone.be/items/012/", 			// 商品URL: 必須
+		"merchandise_category": ["レディース"]
+	}]
+
+
+}
+
+Atone.config ({
+pre_token : "",
+pub_key : "HwT4tzYTqkB4TpL76JTPlA",
+payment : data,
+terminal_id : "4000001800",
+
+
+authenticated : function ( authentication_token, user_no) {
+	//call back
+	alert("authentication_token:"+authentication_token +"user_no"+user_no); 	
+	authentication_token_get = authentication_token; 
+	
+},
+cancelled : function () {
+	//call back - cancelled 
+	alert('cancel');
+},
+failed : function (response) {
+	//call back - failed 
+	alert('fail response : '+response);
+},
+//call back
+succeeded : function (response) {
+alert('success response : '+response);
+alert(JSON.stringify(response));
+},
+
+
+error : function (name, message, errors) {
+//call back
+alert('error name : '+name+' message : '+ message +'errors : '+ errors); 
+}
+});
+
+
+var button = document.getElementById ("atone-button");
+
+
+button.addEventListener ( "click", function (e) {
+Atone.sync();  
+Atone.start(); 
+}, false)
+</script>
+</body>
+</html>
